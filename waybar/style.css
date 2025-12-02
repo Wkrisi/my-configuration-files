@@ -1,0 +1,295 @@
+@import "mocha.css";
+
+* {
+    font-family: "JetBrainsMono Nerd Font", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    
+}
+
+#waybar {
+  background: transparent;
+}
+
+window#waybar {
+  background: rgba(0, 0, 0, 0.1); /* 0.1 opacity фон */  
+  background-color: shade(@base, 0.9);
+    border-bottom: 3px solid rgba(100, 114, 125, 0.5);
+    color: #ffffff;
+    transition-property: background-color;
+    transition-duration: 0.5s;
+    border: 2px solid alpha(@crust, 0.3);
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+window#waybar.termite {
+    background-color: #3F3F3F;
+}
+
+window#waybar.chromium {
+    background-color: #000000;
+    border: none;
+}
+
+button {
+    box-shadow: inset 0 -3px transparent;
+    border: none;
+    border-radius: 0;
+}
+
+button:hover {
+    background: inherit;
+    box-shadow: inset 0 -3px #ffffff;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: #ffffff;
+}
+
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#workspaces button.focused {
+    background-color: #64727D;
+    box-shadow: inset 0 -3px #ffffff;
+}
+
+#workspaces button.urgent {
+    background-color: #eb4d4b;
+}
+
+#mode {
+    background-color: #64727D;
+    box-shadow: inset 0 -3px #ffffff;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#hyprland-language,
+#keyboard-state,
+#custom-media,
+#tray,
+#mode,
+#language,
+#idle_inhibitor,
+#scratchpad,
+#custom-power,
+#power-profiles-daemon,
+#cava {
+    color: #CBA6F7;
+    font-size: 12px;
+    padding: 0 6px;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+   opacity: 0.9
+}
+
+/* Добавете това към вашия style.css */
+#custom-dnd {
+    color: #ffffff; /* Бял цвят на иконата */
+    background-color: #2e3440; /* Тъмен фон, може да използвате цвета на бара */
+    padding: 0 10px;
+    border-radius: 5px;
+}
+
+#custom-dnd:hover {
+    background-color: #bf616a; /* Червен фон при задържане (цвят, който намеква за DND) */
+}
+/* --- Hyprland Language Module --- */
+#language {
+    background-color: shade(@base, 0.9);
+  /*  color: #740864; */
+    padding: 0 5px;
+    margin: 0 5px;
+    min-width: 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    opacity: 1;
+}
+
+/* Keyboard state */
+#keyboard-state {
+    background: #97e1ad;
+    color: #000000;
+    padding: 0 5px;
+    margin: 0 5px;
+    min-width: 16px;
+}
+
+#keyboard-state > label {
+    padding: 0 5px;
+}
+
+#keyboard-state > label.locked {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Scratchpad */
+#scratchpad {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+#scratchpad.empty {
+    background-color: transparent;
+}
+
+/* Battery */
+#battery {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: #ffffff;
+    background-color: #26A65B;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f53c3c;
+    color: #ffffff;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+/* Power profiles */
+#power-profiles-daemon.performance {
+    background-color: #f53c3c;
+    color: #ffffff;
+}
+
+#power-profiles-daemon.balanced {
+    background-color: #2980b9;
+    color: #ffffff;
+}
+
+#power-profiles-daemon.power-saver {
+    background-color: #2ecc71;
+    color: #000000;
+}
+
+/* Tooltips */
+tooltip {
+    background-color: #1e1e2e;
+    border-radius: 8px;
+    border: 1px solid #cdd6f4;
+}
+
+tooltip label {
+    color: #cdd6f4;
+}
+
+/* CPU / Memory / Disk / Temperature / Backlight / Network / Pulseaudio */
+#cpu, #memory, #pulseaudio, #tray {
+    background-color: shade(@base, 0.9);
+}
+
+#pulseaudio, #cpu, #memory {
+  margin-right: 5px
+}
+
+#disk {
+    background-color: #964B00;
+}
+
+#backlight {
+    background-color: #90b1b1;
+}
+
+#network {
+    background-color: #2980b9;
+}
+
+#network.disconnected {
+    background-color: #f53c3c;
+}
+
+#pulseaudio.muted {
+    background-color: #90b1b1;
+    color: #2a5c45;
+}
+
+#wireplumber {
+    background-color: #fff0f5;
+    color: #000000;
+}
+
+#wireplumber.muted {
+    background-color: #f53c3c;
+}
+
+/* Custom media modules */
+#custom-media {
+    background-color: #66cc99;
+    color: #2a5c45;
+    min-width: 100px;
+}
+
+#custom-media.custom-spotify {
+    background-color: #66cc99;
+}
+
+#custom-media.custom-vlc {
+    background-color: #ffa000;
+}
+
+/* Temperature */
+#temperature {
+    background-color: #f0932b;
+}
+
+#temperature.critical {
+    background-color: #eb4d4b;
+}
+
+/* Cava */
+#cava {
+    background-color: shade(@base, 0.9);
+}
+
+/* Clock */
+#clock {
+    background-color: #FFFFFF;
+    color: #000000;
+    border-radius: 25px;
+}
+
+/* Privacy indicators */
+#privacy-item {
+    padding: 0 5px;
+    color: white;
+}
+
+#privacy-item.screenshare {
+    background-color: #cf5700;
+}
+
+#privacy-item.audio-in {
+    background-color: #1ca000;
+}
+
+#privacy-item.audio-out {
+    background-color: #0069d4;
+}
