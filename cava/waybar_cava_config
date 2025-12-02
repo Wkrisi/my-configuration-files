@@ -1,0 +1,17 @@
+[general]
+framerate = 10
+bars = 14
+
+[input]
+method = pulse
+source = auto 
+# Ако имаш проблем, замени "auto" с името на твоя sink, 
+# което можеш да намериш с командата "pacmd list-sinks" или "pactl list sinks"
+
+[output]
+method = raw
+format = ascii
+ascii_max_height = 8 
+# Това е важно, за да не излиза извън Waybar height: 30
+channels = stereo
+bar_delimiter = 0
