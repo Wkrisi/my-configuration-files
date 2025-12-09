@@ -6,33 +6,40 @@
     "spacing": 4,
 
     "modules-left": [
-        "hyprland/workspaces",
+        "niri/workspaces",
         "custom/cava"
-        // "cava"
     ],
 
     "modules-center": [
         "clock"
-//        "custom/dnd"
     ],
 
-    "modules-right": [
-        "pulseaudio",
-        "cpu",
-        "memory",
-        "hyprland/language", // ТУК Е МОДУЛЪТ!
-        "tray",
-        "custom/power"
-    ],
+"modules-right": [
+    "pulseaudio",
+    "cpu",
+    "memory",
+    "custom/swaync",
+    "niri/language",
+    "custom/power",
+    "tray"
+],
+ 
 
     "tray": {
         "icon-size": 21,
         "spacing": 10
     },
 
-
-   
-
+    "niri/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "browser": "",
+            "discord": "",
+            "chat": "<b></b>",
+            "active": "",
+            "default": ""
+        }
+    },
 
     "clock": {
         "timezone": "Europe/Sofia",
@@ -84,7 +91,6 @@
     "battery": {
         "states": { "warning": 30, "critical": 15 },
         "format": "{capacity}% {icon}",
-
         "format-full": "{capacity}% {icon}",
         "format-charging": "{capacity}% ",
         "format-plugged": "{capacity}% ",
@@ -121,7 +127,6 @@
         "format": "{volume}% {icon}",
         "format-bluetooth": "{volume}% {icon}",
         "format-muted": " ",
-
         "format-icons": {
             "alsa_output.pci-0000_00_1f.3.analog-stereo": "",
             "alsa_output.pci-0000_00_1f.3.analog-stereo-muted": "",
@@ -134,33 +139,29 @@
             "car": "",
             "default": ["", " "]
         },
-
         "scroll-step": 1,
         "on-click": "pavucontrol",
         "ignored-sinks": ["Easy Effects Sink"]
     },
 
-
-"cava": {
-    "framerate": 15,
-    "autosens": 1,
-    "sensitivity": 2
-    ,
-    "bars": 14,
-    "lower_cutoff_freq": 50,
-    "higher_cutoff_freq": 10000,
-    "hide_on_silence": false,
-    "method": "pulse",
-    "source": "auto",
-    "stereo": true,
-    "reverse": false,
-    "bar_delimiter": 0,
-    "monstercat": false,
-    "waves": false,
-    "noise_reduction": 0.77,
-    "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"]
-},
-
+    "cava": {
+        "framerate": 15,
+        "autosens": 1,
+        "sensitivity": 2,
+        "bars": 14,
+        "lower_cutoff_freq": 50,
+        "higher_cutoff_freq": 10000,
+        "hide_on_silence": false,
+        "method": "pulse",
+        "source": "auto",
+        "stereo": true,
+        "reverse": false,
+        "bar_delimiter": 0,
+        "monstercat": false,
+        "waves": false,
+        "noise_reduction": 0.77,
+        "format-icons": ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"]
+    },
 
     "custom/media": {
         "format": "{icon} {text}",
@@ -174,36 +175,32 @@
         "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"icon\": \"🎜\"}' --follow 2>/dev/null"
     },
 
-
     "custom/power": {
         "format": "⏻",
         "tooltip": false,
         "on-click": "wlogout"
     },
 
-  "hyprland/language": {
+    "niri/language": {
+        "format": "  {short}",
+        "format-english-us": "en",
+        "format-bulgarian-traditional_phonetic": "bg",
+        "keyboard-name": "logitech-gaming-keyboard-g213",
+        "on-click": "hyprctl switchxkblayout logitech-gaming-keyboard-g213 next"
+    },
 
-    "format": "  {short}",
-
-    "format-english-us": "en",
-
-    "format-bulgarian-traditional_phonetic": "bg",
-
-    "keyboard-name": "logitech-gaming-keyboard-g213",
-
-    "on-click": "hyprctl switchxkblayout logitech-gaming-keyboard-g213 next"
-
-},
-
-
-
-
- "custom/cava": {
+    "custom/cava": {
         "format": "{}",
         "exec": "~/.config/waybar/cava_script_for_waybar.sh"
+    },
+
+    "custom/swaync": {
+        "format": "{}",
+        "exec": "swaync-client -swb",
+        "tooltip": false,
+        "on-click": "swaync-client -t",
+        "on-click-right": "swaync-client -d",
+        "interval": 1
     }
-
-
-
 }
 
