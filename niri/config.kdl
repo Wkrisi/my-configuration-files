@@ -278,6 +278,9 @@ layout {
 // See the binds section below for more spawn examples.
 
 // This line starts waybar, a commonly used bar for Wayland compositors.
+spawn-at-startup "~/.config/niri/swaync.sh"
+
+
 spawn-at-startup "waybar"
  //spawn-at-startup "waypaper --restore"
 spawn-at-startup "swww-daemon"
@@ -386,6 +389,7 @@ binds {
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn-sh "rofi -show drun"; }
     Super+P hotkey-overlay-title="Lock the Screen: swaylock" { spawn "hyprlock"; }
     Super+E hotkey-overlay-title="file manager" {spawn "thunar";}
+    Super+W hotkey-overlay-title="librewolf" {spawn "librewolf";}
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
     // For example, this is a standard bind to toggle the screen reader (orca).
