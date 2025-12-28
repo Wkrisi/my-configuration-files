@@ -6,20 +6,20 @@
     "spacing": 4,
 
     "modules-left": [
-        "niri/workspaces",
+        "hyprland/workspaces",
         "custom/cava"
     ],
 
     "modules-center": [
-        "clock"
+        "clock",
+        "custom/swaync" 
     ],
 
 "modules-right": [
     "pulseaudio",
     "cpu",
     "memory",
-    "custom/swaync",
-    "niri/language",
+    "hyprland/language",
     "custom/power",
     "tray"
 ],
@@ -181,7 +181,7 @@
         "on-click": "wlogout"
     },
 
-    "niri/language": {
+    "hyprland/language": {
         "format": "  {short}",
         "format-english-us": "en",
         "format-bulgarian-traditional_phonetic": "bg",
@@ -191,16 +191,22 @@
 
     "custom/cava": {
         "format": "{}",
-        "exec": "~/.config/waybar/cava.sh"
+        "exec": "~/.config/waybar/cava_script_for_waybar.sh"
     },
 
     "custom/swaync": {
-        "format": "{}",
-        "exec": "swaync-client -swb",
-        "tooltip": false,
-        "on-click": "swaync-client -t",
-        "on-click-right": "swaync-client -d",
-        "interval": 1
-    }
+    "exec": "swaync-client -swb",
+    "return-type": "json",
+    "format": "{icon}",
+    "format-icons": {
+        "notification": " ",
+        "none": "󰍥 ",
+        "dnd-notification": " ",
+        "dnd-none": "󰍥 "
+    },
+    "tooltip": false,
+    "on-click": "swaync-client -t",
+    "on-click-right": "swaync-client -d"
 }
 
+}
