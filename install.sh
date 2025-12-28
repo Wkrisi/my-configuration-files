@@ -86,3 +86,4 @@ dialog --backtitle "$BACKTITLE" \
 --msgbox "Installation completed successfully!\n\nPlease restart your session." 8 50
 
 clear
+reboot
