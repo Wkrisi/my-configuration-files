@@ -18,7 +18,10 @@ install_packages() {
     fi
 
     echo "Installing base dependencies..."
-    $INSTALL_CMD dialog wlogout swww waybar hyprland swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol
+    $INSTALL_CMD dialog wlogout swww waybar hyprland swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol --needed base-devel
+    git clone https://aur.archlinux.org/paru.git ~/Documents/
+    makepkg -si ~/Documents/paru
+
  
 if [[ $SELECTED == *"Hyprland"* ]]; then
         echo "Installing Hyprland configs..."
