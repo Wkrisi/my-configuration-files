@@ -86,7 +86,7 @@ dialog --backtitle "$BACKTITLE" \
 --yesno "Installation completed successfully!\n\nPlease restart your session." 8 50
 
 if [[ $? -ne 0 ]]; then
-  
+  clear
 fi
 
 clear
