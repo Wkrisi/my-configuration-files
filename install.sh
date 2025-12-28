@@ -18,7 +18,7 @@ install_packages() {
     fi
 
     echo "Installing base dependencies..."
-    $INSTALL_CMD dialog wlogout swww waybar hyprland swaync kitty thunar hyprlock hypridle lsd fzf
+    $INSTALL_CMD dialog wlogout swww waybar hyprland swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol
  
 if [[ $SELECTED == *"Hyprland"* ]]; then
         echo "Installing Hyprland configs..."
@@ -30,6 +30,7 @@ if [[ $SELECTED == *"Hyprland"* ]]; then
     if [[ $SELECTED == *"Waybar"* ]]; then
         echo "Installing Waybar configs..."
         cp -rf "$SCRIPT_DIR/waybar" "$HOME/.config/"
+        chmod +x ~/.config/waybar/cava.sh
     fi
 
 
