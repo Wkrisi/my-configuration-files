@@ -20,6 +20,11 @@ install_packages() {
             sudo pacman -S --noconfirm waybar
         fi
     fi
+
+    sudo pacman -S --noconfirm swync
+    sudo pacman -S --noconfirm wlsunset
+    sudo pacman -S --noconfirm thunar
+    sudo pacman -S --noconfirm wlogout
 }
 
 BACKTITLE="Krisi's Dotfiles Installer"
