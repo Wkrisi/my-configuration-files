@@ -25,6 +25,8 @@ install_packages() {
     sudo pacman -S --noconfirm wlsunset
     sudo pacman -S --noconfirm thunar
     sudo pacman -S --noconfirm wlogout
+    sudo pacman -S --noconfirm kitty
+    sudo pacman -S --noconfirm ttf-jetbrains-mono-nerd
 }
 
 BACKTITLE="Krisi's Dotfiles Installer"
