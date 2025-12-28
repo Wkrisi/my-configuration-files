@@ -4,29 +4,47 @@ if [ -f /etc/NIXOS ] && ! command -v dialog &> /dev/null; then
     exec nix-shell -p dialog --run "$(printf "%q " "$0" "$@")"
 fi
 
-# Дефинираме функцията, но ще я извикаме по-късно
 install_packages() {
+    # Проверка за мениджър на пакети
     if [ -f /etc/arch-release ]; then
-        echo "Updating system and installing base dependencies..."
-        sudo pacman -S --noconfirm dialog wlogout swww waybar hyprland
-
-        if [[ $SELECTED == *"Hyprland"* ]]; then
-            echo "Configuring Hyprland..."
-            sudo pacman -S --noconfirm hyprland
-        fi
-        
-        if [[ $SELECTED == *"Waybar"* ]]; then
-            echo "Configuring Waybar..."
-            sudo pacman -S --noconfirm waybar
-        fi
+        INSTALL_CMD="sudo pacman -S --noconfirm"
+    elif [ -f /etc/NIXOS ]; then
+        INSTALL_CMD="nix-env -iA nixos"
+    else
+        echo "Unsupported system."
+        exit 1
     fi
 
-    sudo pacman -S --noconfirm swaync
-    sudo pacman -S --noconfirm wlsunset
-    sudo pacman -S --noconfirm thunar
-    sudo pacman -S --noconfirm wlogout
-    sudo pacman -S --noconfirm kitty
-    sudo pacman -S --noconfirm ttf-jetbrains-mono-nerd
+    echo "Installing base dependencies..."
+    $INSTALL_CMD dialog wlogout swww waybar hyprland swaync kitty thunar hyprlock hypridle
+
+    if [[ $SELECTED == *"Hyprland"* ]]; then
+        $INSTALL_CMD hyprland
+    fi
+    
+    if [[ $SELECTED == *"Waybar"* ]]; then
+        $INSTALL_CMD waybar
+    fi
+
+    if [[ $SELECTED == *"Zsh"* ]]; then
+        $INSTALL_CMD zsh
+    fi
+
+    # Специално за шрифтовете на Arch
+    if [ -f /etc/arch-release ]; then
+        $INSTALL_CMD ttf-jetbrains-mono-nerd
+    fi
+
+    clear
+    # Въпросът за Zsh в терминала
+    echo -n "Do you want to make zsh the default shell? (y/N): "
+    read -r answer
+    answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+
+    if [[ "$answer" == "y" ]]; then
+        echo "Changing default shell to zsh..."
+        chsh -s "$(which zsh)"
+    fi
 }
 
 BACKTITLE="Krisi's Dotfiles Installer"
@@ -44,8 +62,6 @@ if [ $? -ne 0 ]; then
 fi
 
 TEMP_FILE=$(mktemp)
-
-# Поправен checklist блок
 dialog --backtitle "$BACKTITLE" \
 --title " Selection " \
 --checklist "Select which configs to install:" $HEIGHT $WIDTH 10 \
@@ -63,21 +79,7 @@ SELECTED=$(cat $TEMP_FILE)
 rm $TEMP_FILE
 
 clear
-
-# Първо проверяваме дали изобщо имаме dialog (за всеки случай)
-if ! command -v dialog &> /dev/null && [ ! -f /etc/NIXOS ]; then
-    if [ -f /etc/arch-release ]; then
-        sudo pacman -S --noconfirm dialog
-    fi
-fi
-
-# Извикваме инсталацията СЛЕД като вече знаем какво е избрано
 install_packages
-
-echo "Installing selected components: $SELECTED"
-
-# Тук можеш да сложиш твоя git clone
-# git clone https://github.com/Wkrisi/my-configuration-files.git
 
 dialog --backtitle "$BACKTITLE" \
 --title " Finished " \
