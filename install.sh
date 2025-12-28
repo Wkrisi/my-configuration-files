@@ -34,6 +34,8 @@ if [[ $SELECTED == *"Hyprland"* ]]; then
     
     if [[ $SELECTED == *"Waybar"* ]]; then
         echo "Installing Waybar configs..."
+        rm -rf ~/.config/waybar
+        mkdir -p ~/.config/waybar
         cp -rf "$SCRIPT_DIR/waybar" "$HOME/.config/"
         chmod +x ~/.config/waybar/cava.sh
     fi
