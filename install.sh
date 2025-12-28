@@ -21,7 +21,7 @@ install_packages() {
         fi
     fi
 
-    sudo pacman -S --noconfirm swync
+    sudo pacman -S --noconfirm swaync
     sudo pacman -S --noconfirm wlsunset
     sudo pacman -S --noconfirm thunar
     sudo pacman -S --noconfirm wlogout
