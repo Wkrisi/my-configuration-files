@@ -16,7 +16,7 @@ install_packages() {
     fi
 
     echo "Installing base dependencies..."
-    $INSTALL_CMD dialog wlogout swww waybar hyprland swaync kitty thunar hyprlock hypridle
+    $INSTALL_CMD dialog wlogout swww waybar hyprland swaync kitty thunar hyprlock hypridle lsd fzf
 
     if [[ $SELECTED == *"Hyprland"* ]]; then
         $INSTALL_CMD hyprland
@@ -83,7 +83,11 @@ install_packages
 
 dialog --backtitle "$BACKTITLE" \
 --title " Finished " \
---msgbox "Installation completed successfully!\n\nPlease restart your session." 8 50
+--yesno "Installation completed successfully!\n\nPlease restart your session." 8 50
+
+if [[ $? -ne 0 ]]; then
+  
+fi
 
 clear
 reboot
