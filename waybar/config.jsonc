@@ -191,7 +191,7 @@
 
     "custom/cava": {
         "format": "{}",
-        "exec": "~/.config/waybar/cava_script_for_waybar.sh"
+        "exec": "~/.config/waybar/cava.sh"
     },
 
     "custom/swaync": {
