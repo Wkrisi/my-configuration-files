@@ -22,7 +22,7 @@ install_packages() {
     git clone https://aur.archlinux.org/paru.git ~/Documents/
     makepkg -si ~/Documents/paru
 
-    paru -S python-pywal16
+    sudo pacman -S --noconfirm python-pywal
 
  
 if [[ $SELECTED == *"Hyprland"* ]]; then
