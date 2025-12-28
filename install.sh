@@ -4,6 +4,8 @@ if [ -f /etc/NIXOS ] && ! command -v dialog &> /dev/null; then
     exec nix-shell -p dialog --run "$(printf "%q " "$0" "$@")"
 fi
 
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+
 install_packages() {
     # Проверка за мениджър на пакети
     if [ -f /etc/arch-release ]; then
@@ -17,19 +19,24 @@ install_packages() {
 
     echo "Installing base dependencies..."
     $INSTALL_CMD dialog wlogout swww waybar hyprland swaync kitty thunar hyprlock hypridle lsd fzf
-
-    if [[ $SELECTED == *"Hyprland"* ]]; then
-        $INSTALL_CMD hyprland
+ 
+if [[ $SELECTED == *"Hyprland"* ]]; then
+        echo "Installing Hyprland configs..."
+        # Приемаме, че имаш папка 'hypr' или файл 'hyprland.conf' в репозиторито
+        mkdir -p "$HOME/.config/hypr"
+        cp -rf "$SCRIPT_DIR/hyprland.conf" "$HOME/.config/hypr/" 2>/dev/null || cp -rf "$SCRIPT_DIR/hypr/" "$HOME/.config/"
     fi
     
     if [[ $SELECTED == *"Waybar"* ]]; then
-        $INSTALL_CMD waybar
+        echo "Installing Waybar configs..."
+        cp -rf "$SCRIPT_DIR/waybar" "$HOME/.config/"
     fi
+
 
     if [[ $SELECTED == *"Zsh"* ]]; then
-        $INSTALL_CMD zsh
+        echo "Installing Zsh config..."
+        cp -f "$SCRIPT_DIR/.zshrc" "$HOME/"
     fi
-
     # Специално за шрифтовете на Arch
     if [ -f /etc/arch-release ]; then
         $INSTALL_CMD ttf-jetbrains-mono-nerd
