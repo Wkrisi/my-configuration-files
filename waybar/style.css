@@ -1,121 +1,108 @@
-@import "mocha.css";
-/* @import url("/home/krisi/.cache/wal/colors-waybar.css"); */
+#!/usr/bin/env bash
 
-* {
-    font-family: "JetBrains Mono Nerd Font";
-    font-size: 13px;
-    border: none;
-    border-radius: 0;
-}
+if [ -f /etc/NIXOS ] && ! command -v dialog &> /dev/null; then
+    exec nix-shell -p dialog --run "$(printf "%q " "$0" "$@")"
+fi
 
-/* Основен прозорец - правим го напълно прозрачен */
-window#waybar {
-    background-color: rgba(0, 0, 0, 0);
-}
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
-/* Стил за групите модули (Островчетата) */
-.modules-left,
-.modules-center,
-.modules-right {
-    background-color: rgba(30, 30, 46, 0.7); /* Фон на модулите */
+install_packages() {
+    # Проверка за мениджър на пакети
+    if [ -f /etc/arch-release ]; then
+        INSTALL_CMD="sudo pacman -S --noconfirm"
+    elif [ -f /etc/NIXOS ]; then
+        INSTALL_CMD="nix-env -iA nixos"
+    else
+        echo "Unsupported system."
+        exit 1
+    fi
+
+    echo "Installing base dependencies..."
+    $INSTALL_CMD dialog wlogout swww waybar hyprland swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol --needed base-devel
+    git clone https://aur.archlinux.org/paru.git ~/Documents/
+    makepkg -si ~/Documents/paru
+
+    sudo pacman -S --noconfirm python-pywal
+
+ 
+if [[ $SELECTED == *"Hyprland"* ]]; then
+        echo "Installing Hyprland configs..."
+        # Приемаме, че имаш папка 'hypr' или файл 'hyprland.conf' в репозиторито
+        mkdir -p "$HOME/.config/hypr"
+        cp -rf "$SCRIPT_DIR/hyprland.conf" "$HOME/.config/hypr/" 2>/dev/null || cp -rf "$SCRIPT_DIR/hypr/" "$HOME/.config/"
+    fi
     
-    /* Добавяне на border */
-    border: 2px solid rgba(205, 214, 244, 0.3); /* 1px дебелина, цвят с 30% прозрачност */
-    
-    border-radius: 12px;
-    padding: 2px 10px;
-    margin: 5px 5px;
+    if [[ $SELECTED == *"Waybar"* ]]; then
+        echo "Installing Waybar configs..."
+        rm -rf ~/.config/waybar
+        cp -rf "$SCRIPT_DIR/waybar" "$HOME/.config/"
+        chmod +x ~/.config/waybar/cava.sh
+    fi
+
+
+    if [[ $SELECTED == *"Zsh"* ]]; then
+        echo "Installing Zsh config..."
+        cp -f "$SCRIPT_DIR/.zshrc" "$HOME/"
+    fi
+    # Специално за шрифтовете на Arch
+    if [ -f /etc/arch-release ]; then
+        $INSTALL_CMD ttf-jetbrains-mono-nerd
+    fi
+
+    clear
+    # Въпросът за Zsh в терминала
+    echo -n "Do you want to make zsh the default shell? (y/N): "
+    read -r answer
+    answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+
+    if [[ "$answer" == "y" ]]; then
+        echo "Changing default shell to zsh..."
+        chsh -s "$(which zsh)"
+    fi
 }
 
-.modules-left {
-    margin-left: 10px;
-}
+BACKTITLE="Krisi's Dotfiles Installer"
+HEIGHT=15
+WIDTH=65
 
-.modules-right {
-    margin-right: 10px;
-}
+dialog --backtitle "$BACKTITLE" \
+--title " Welcome! " \
+--yesno "Hi! I'm Kristiyan. This is the project I've been working on.\n\n                  Do you want to continue?" \
+$HEIGHT $WIDTH
 
-/* Общи настройки за всички модули вътре в островчетата */
-#workspaces,
-#mode,
-#clock,
-#battery,
-#cpu,
-#memory,
-#disk,
-#temperature,
-#backlight,
-#network,
-#pulseaudio,
-#wireplumber,
-#tray,
-#language,
-#custom-media,
-#custom-power {
-    padding: 0 8px;
-    background-color: transparent; /* Премахваме индивидуалните фонове */
-    color: #cdd6f4;
-}
+if [ $? -ne 0 ]; then
+    clear
+    exit 0
+fi
 
-/* Специфично за Workspaces */
-#workspaces button {
-    padding: 0 5px;
-    color: #ffffff;
-    background-color: transparent;
-}
+TEMP_FILE=$(mktemp)
+dialog --backtitle "$BACKTITLE" \
+--title " Selection " \
+--checklist "Select which configs to install:" $HEIGHT $WIDTH 10 \
+"Hyprland" "Window Manager config" ON \
+"Waybar" "Status bar theme" ON \
+"Zsh" "Shell configuration (.zshrc)" OFF 2> $TEMP_FILE
 
-#workspaces button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: none;
-    border-radius: 8px;
-}
+if [ $? -ne 0 ]; then
+    rm $TEMP_FILE
+    clear
+    exit 0
+fi
 
-#workspaces button.active {
-    color: @mauve;
-    background-color: rgba(203, 166, 247, 0.2);
-    border-radius: 8px;
-}
+SELECTED=$(cat $TEMP_FILE)
+rm $TEMP_FILE
 
-#workspaces button.urgent {
-    background-color: #f38ba8;
-    border-radius: 8px;
-}
+clear
+install_packages
 
-/* Часовникът в края (ако искате да е по-светъл като на снимката) */
-#clock {
-    font-weight: bold;
-    color: #cdd6f4;
-}
+dialog --backtitle "$BACKTITLE" \
+--title " Finished " \
+--yesno "Installation completed successfully!\n\nPlease restart your session." 8 50
 
-/* Анимация за батерията */
-@keyframes blink {
-    to {
-        color: #1e1e2e;
-        background-color: #f38ba8;
-    }
-}
+if [[ $? -ne 0 ]]; then
+  clear
+  exit 0
+fi
 
-#battery.critical:not(.charging) {
-    color: #f38ba8;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-}
-
-/* Tooltips */
-tooltip {
-    background: #1e1e2e;
-    border: 1px solid @mauve;
-    border-radius: 10px;
-}
-
-tooltip label {
-    color: #cdd6f4;
-}
-
-/* Премахваме излишните фонове, които бяха дефинирани по-долу в стария файл */
-#cpu, #memory, #pulseaudio, #network, #tray, #language {
-    background-color: transparent;
-}
+clear
+reboot
