@@ -181,13 +181,13 @@
         "on-click": "wlogout"
     },
 
-    "hyprland/language": {
-        "format": "  {short}",
-        "format-english-us": "en",
-        "format-bulgarian-traditional_phonetic": "bg",
-        "keyboard-name": "logitech-gaming-keyboard-g213",
-        "on-click": "hyprctl switchxkblayout logitech-gaming-keyboard-g213 next"
-    },
+   "hyprland/language": {
+    "format": "  {short}",
+    "format-english-us": "en",
+    "format-bulgarian-traditional_phonetic": "bg",
+    "on-click": "hyprctl switchxkblayout current next"
+},
+
 
     "custom/cava": {
         "format": "{}",
