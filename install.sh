@@ -87,6 +87,7 @@ dialog --backtitle "$BACKTITLE" \
 
 if [[ $? -ne 0 ]]; then
   clear
+  exit 0
 fi
 
 clear
