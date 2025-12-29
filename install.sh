@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sudo pacman -S --noconfirm dialog
+
 
 if [ -f /etc/NIXOS ] && ! command -v dialog &> /dev/null; then
     exec nix-shell -p dialog --run "$(printf "%q " "$0" "$@")"
@@ -25,6 +25,7 @@ install_packages() {
     makepkg -si ~/Documents/paru
 
     sudo pacman -S --noconfirm python-pywal
+    sudo pacman -S --noconfirm dialog
 
  
 if [[ $SELECTED == *"Hyprland"* ]]; then
