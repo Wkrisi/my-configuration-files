@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+ sudo pacman -S --noconfirm dialog
 
 
 if [ -f /etc/NIXOS ] && ! command -v dialog &> /dev/null; then
@@ -12,8 +13,8 @@ install_packages() {
     # Проверка за мениджър на пакети
     if [ -f /etc/arch-release ]; then
         INSTALL_CMD="sudo pacman -S --noconfirm"
-          sudo pacman -S --noconfirm python-pywal
-          sudo pacman -S --noconfirm dialog
+         
+         
     elif [ -f /etc/NIXOS ]; then
         INSTALL_CMD="nix-env -iA nixos"
     else
@@ -26,7 +27,7 @@ install_packages() {
     git clone https://aur.archlinux.org/paru.git ~/Documents/
     makepkg -si ~/Documents/paru
 
-  
+   sudo pacman -s --noconfirm python-pywal
 
  
 if [[ $SELECTED == *"Hyprland"* ]]; then
