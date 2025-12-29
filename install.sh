@@ -23,7 +23,7 @@ install_packages() {
     fi
 
     echo "Installing base dependencies..."
-    $INSTALL_CMD dialog wlogout swww swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol --needed base-devel zoxide cava rofi nwg-look xdg-desktop-portal-hyprland
+    $INSTALL_CMD dialog wlogout swww swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol --needed base-devel zoxide cava nwg-look xdg-desktop-portal-hyprland
     git clone https://aur.archlinux.org/paru.git ~/Documents/
     makepkg -si ~/Documents/paru
 
@@ -52,7 +52,8 @@ if [[ $SELECTED == *"Hyprland"* ]]; then
         cp -f "$SCRIPT_DIR/.zshrc" "$HOME/"
     fi
 
-    if [[ $SELECTED == *"rofi"* ]]; then
+    if [[ $SELECTED == *"Rofi"* ]]; then
+         $INSTALL_CMD rofi
          mkdir - p ~/.config/rofi/
          cp -f "$SCRIPT_DIR/config.rasi $HOME/.config/rofi"     
     fi
