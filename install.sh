@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sudo pacman -S --noconfirm dialog
+
 if [ -f /etc/NIXOS ] && ! command -v dialog &> /dev/null; then
     exec nix-shell -p dialog --run "$(printf "%q " "$0" "$@")"
 fi
@@ -18,7 +20,7 @@ install_packages() {
     fi
 
     echo "Installing base dependencies..."
-    $INSTALL_CMD dialog wlogout swww waybar hyprland swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol --needed base-devel zoxide cava
+    $INSTALL_CMD dialog wlogout swww swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol --needed base-devel zoxide cava rofi nwg-look xdg-desktop-portal-hyprland
     git clone https://aur.archlinux.org/paru.git ~/Documents/
     makepkg -si ~/Documents/paru
 
@@ -43,12 +45,18 @@ if [[ $SELECTED == *"Hyprland"* ]]; then
 
     if [[ $SELECTED == *"Zsh"* ]]; then
         echo "Installing Zsh config..."
+        sudo pacman -S --noconfirm zsh
         cp -f "$SCRIPT_DIR/.zshrc" "$HOME/"
+    fi
+
+    if [[ $SELECTED == *"rofi"* ]]; then
+      
     fi
     # Специално за шрифтовете на Arch
     if [ -f /etc/arch-release ]; then
         $INSTALL_CMD ttf-jetbrains-mono-nerd
     fi
+
 
     clear
     # Въпросът за Zsh в терминала
@@ -80,9 +88,10 @@ TEMP_FILE=$(mktemp)
 dialog --backtitle "$BACKTITLE" \
 --title " Selection " \
 --checklist "Select which configs to install:" $HEIGHT $WIDTH 10 \
-"Hyprland" "Window Manager config" ON \
-"Waybar" "Status bar theme" ON \
-"Zsh" "Shell configuration (.zshrc)" OFF 2> $TEMP_FILE
+"Hyprland" "Window Manager config" OFF \
+"Waybar" "Status bar theme" OFF \
+"Zsh" "Shell configuration (.zshrc)" OFF 2> $TEMP_FILE \
+"Rofi" "Application manager" OFF 
 
 if [ $? -ne 0 ]; then
     rm $TEMP_FILE
