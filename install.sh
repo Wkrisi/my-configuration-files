@@ -12,6 +12,8 @@ install_packages() {
     # Проверка за мениджър на пакети
     if [ -f /etc/arch-release ]; then
         INSTALL_CMD="sudo pacman -S --noconfirm"
+          sudo pacman -S --noconfirm python-pywal
+          sudo pacman -S --noconfirm dialog
     elif [ -f /etc/NIXOS ]; then
         INSTALL_CMD="nix-env -iA nixos"
     else
@@ -24,8 +26,7 @@ install_packages() {
     git clone https://aur.archlinux.org/paru.git ~/Documents/
     makepkg -si ~/Documents/paru
 
-    sudo pacman -S --noconfirm python-pywal
-    sudo pacman -S --noconfirm dialog
+  
 
  
 if [[ $SELECTED == *"Hyprland"* ]]; then
@@ -51,7 +52,8 @@ if [[ $SELECTED == *"Hyprland"* ]]; then
     fi
 
     if [[ $SELECTED == *"rofi"* ]]; then
-      
+         mkdir - p ~/.config/rofi/
+         cp -f "$SCRIPT_DIR/config.rasi $HOME/.config/rofi"     
     fi
     # Специално за шрифтовете на Arch
     if [ -f /etc/arch-release ]; then
