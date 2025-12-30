@@ -23,11 +23,11 @@ install_packages() {
     fi
 
     echo "Installing base dependencies..."
-    $INSTALL_CMD dialog wlogout swww swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol --needed base-devel zoxide cava nwg-look xdg-desktop-portal-hyprland
+    $INSTALL_CMD dialog wlogout swww swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol --needed base-devel zoxide cava nwg-look xdg-desktop-portal-hyprland imagemagick grim slurp dolphin hyprshot
     git clone https://aur.archlinux.org/paru.git ~/Documents/
     makepkg -si ~/Documents/paru
 
-   sudo pacman -s --noconfirm python-pywal
+   sudo pacman -S --noconfirm python-pywal
 
  
 if [[ $SELECTED == *"Hyprland"* ]]; then
