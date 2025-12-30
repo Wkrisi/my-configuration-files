@@ -1,76 +1,76 @@
 #!/usr/bin/env bash
 
- sudo pacman -S --noconfirm dialog
-
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
 if [ -f /etc/NIXOS ] && ! command -v dialog &> /dev/null; then
     exec nix-shell -p dialog --run "$(printf "%q " "$0" "$@")"
 fi
 
-SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-
 install_packages() {
-    # Проверка за мениджър на пакети
     if [ -f /etc/arch-release ]; then
         INSTALL_CMD="sudo pacman -S --noconfirm"
-         
-         
+        
+        if ! command -v paru &> /dev/null; then
+            sudo pacman -S --needed --noconfirm base-devel git
+            git clone https://aur.archlinux.org/paru.git /tmp/paru
+            cd /tmp/paru && makepkg -si --noconfirm
+            cd "$SCRIPT_DIR"
+        fi
     elif [ -f /etc/NIXOS ]; then
         INSTALL_CMD="nix-env -iA nixos"
     else
-        echo "Unsupported system."
         exit 1
     fi
 
-    echo "Installing base dependencies..."
-    $INSTALL_CMD dialog wlogout swww swaync kitty thunar hyprlock hypridle lsd fzf pavucontrol --needed base-devel zoxide cava nwg-look xdg-desktop-portal-hyprland imagemagick grim slurp dolphin hyprshot
-    git clone https://aur.archlinux.org/paru.git ~/Documents/
-    makepkg -si ~/Documents/paru
+    $INSTALL_CMD dialog wlogout swww swaync kitty thunar hyprlock hypridle lsd fzf \
+                pavucontrol zoxide cava nwg-look xdg-desktop-portal-hyprland \
+                imagemagick grim slurp dolphin hyprshot
 
-   sudo pacman -S --noconfirm python-pywal
+    if [ -f /etc/arch-release ]; then
+        printf "1\n" | paru -S --noconfirm python-pywal16
+    else
+        $INSTALL_CMD python-pywal
+    fi
 
- 
-if [[ $SELECTED == *"Hyprland"* ]]; then
-        echo "Installing Hyprland configs..."
-        # Приемаме, че имаш папка 'hypr' или файл 'hyprland.conf' в репозиторито
+    mkdir -p "$HOME/.config"
+
+    if [[ $SELECTED == *"Hyprland"* ]]; then
         mkdir -p "$HOME/.config/hypr"
-        cp -rf "$SCRIPT_DIR/hyprland.conf" "$HOME/.config/hypr/" 2>/dev/null || cp -rf "$SCRIPT_DIR/hypr/" "$HOME/.config/"
+        if [ -d "$SCRIPT_DIR/hypr" ]; then
+            cp -rf "$SCRIPT_DIR/hypr/." "$HOME/.config/hypr/"
+        else
+            cp -f "$SCRIPT_DIR/hyprland.conf" "$HOME/.config/hypr/"
+        fi
     fi
     
     if [[ $SELECTED == *"Waybar"* ]]; then
-        echo "Installing Waybar configs..."
-        rm -rf ~/.config/waybar
-        mkdir -p ~/.config/waybar
+        rm -rf "$HOME/.config/waybar"
         cp -rf "$SCRIPT_DIR/waybar" "$HOME/.config/"
-        chmod +x ~/.config/waybar/cava.sh
-    fi
-
-
-    if [[ $SELECTED == *"Zsh"* ]]; then
-        echo "Installing Zsh config..."
-        sudo pacman -S --noconfirm zsh
-        cp -f "$SCRIPT_DIR/.zshrc" "$HOME/"
+        [ -f "$HOME/.config/waybar/cava.sh" ] && chmod +x "$HOME/.config/waybar/cava.sh"
     fi
 
     if [[ $SELECTED == *"Rofi"* ]]; then
-         $INSTALL_CMD rofi
-         mkdir - p ~/.config/rofi/
-         cp -f "$SCRIPT_DIR/config.rasi $HOME/.config/rofi"     
+        $INSTALL_CMD rofi
+        rm -rf "$HOME/.config/rofi"
+        mkdir -p "$HOME/.config/rofi"
+        cp -rf "$SCRIPT_DIR/rofi/." "$HOME/.config/rofi/"
     fi
-    # Специално за шрифтовете на Arch
+
+    if [[ $SELECTED == *"Zsh"* ]]; then
+        $INSTALL_CMD zsh
+        cp -f "$SCRIPT_DIR/.zshrc" "$HOME/"
+    fi
+
     if [ -f /etc/arch-release ]; then
         $INSTALL_CMD ttf-jetbrains-mono-nerd
     fi
 
-
     clear
-    # Въпросът за Zsh в терминала
     echo -n "Do you want to make zsh the default shell? (y/N): "
     read -r answer
     answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
 
     if [[ "$answer" == "y" ]]; then
-        echo "Changing default shell to zsh..."
         chsh -s "$(which zsh)"
     fi
 }
@@ -95,29 +95,30 @@ dialog --backtitle "$BACKTITLE" \
 --checklist "Select which configs to install:" $HEIGHT $WIDTH 10 \
 "Hyprland" "Window Manager config" OFF \
 "Waybar" "Status bar theme" OFF \
-"Zsh" "Shell configuration (.zshrc)" OFF 2> $TEMP_FILE \
-"Rofi" "Application manager" OFF 
+"Zsh" "Shell configuration (.zshrc)" OFF \
+"Rofi" "Application manager" OFF 2> $TEMP_FILE
 
 if [ $? -ne 0 ]; then
-    rm $TEMP_FILE
+    rm "$TEMP_FILE"
     clear
     exit 0
 fi
 
-SELECTED=$(cat $TEMP_FILE)
-rm $TEMP_FILE
+SELECTED=$(cat "$TEMP_FILE")
+rm "$TEMP_FILE"
 
 clear
 install_packages
 
 dialog --backtitle "$BACKTITLE" \
 --title " Finished " \
---yesno "Installation completed successfully!\n\nPlease restart your session." 8 50
+--yesno "Installation completed successfully!\n\nDo you want to reboot now?" 8 50
 
-if [[ $? -ne 0 ]]; then
-  clear
-  exit 0
+if [ $? -eq 0 ]; then
+    clear
+    sleep 1
+    reboot
+else
+    clear
+    exit 0
 fi
-
-clear
-reboot
