@@ -24,7 +24,7 @@ install_packages() {
 
     $INSTALL_CMD dialog wlogout swww swaync kitty thunar hyprlock hypridle lsd fzf \
                 pavucontrol zoxide cava nwg-look xdg-desktop-portal-hyprland \
-                imagemagick grim slurp dolphin hyprshot
+                imagemagick grim slurp dolphin hyprshot hyprland
 
     if [ -f /etc/arch-release ]; then
         printf "1\n" | paru -S --noconfirm python-pywal16
